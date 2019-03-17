@@ -1,11 +1,10 @@
 import psycopg2 as psy
 from psycopg2 import sql
 import os
-#import itertools product
 from operator import itemgetter
 
 conn = psy.connect(dbname='mok', user='postgres', 
-						password='', host='localhost')
+					password='', host='localhost')
 
 def copy_cvs_predictant_storage(point_id, type_id):
 	with conn.cursor() as cursor:
