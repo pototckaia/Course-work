@@ -1,0 +1,79 @@
+def code_mean(data, cat_feature, real_feature):
+    """
+    Возвращает словарь, где ключами являются уникальные категории признака cat_feature, 
+    а значениями - средние по real_feature
+    """
+    return dict(data.groupby(cat_feature)[real_feature].mean())
+
+Посмотрим на средние по дням недели
+code_mean(data, 'weekday', "y")
+
+data.index = data.index.to_datetime()
+data["hour"] = data.index.hour
+data["weekday"] = data.index.weekday
+data['is_weekend'] = data.weekday.isin([5,6])*1
+data.head()
+
+data = pd.DataFrame(dataset.copy())
+data.columns = ["y"]
+
+ максимальное/минимальное значение, наблюдавшееся в скользящем по ряду окне, медианы, число пиков, взвешенные дисперсии и многое другое. Автоматически этим занимается уже упоминавшаяся в курсе библиотека tsfresh.
+
+
+     # считаем средние только по тренировочной части, чтобы избежать лика
+    data['weekday_average'] = list(map(code_mean(data[:test_index], 'weekday', "y").get, data.weekday))
+    data["hour_average"] = list(map(code_mean(data[:test_index], 'hour', "y").get, data.hour))
+
+from sklearn.linear_model import LinearRegression
+
+X_train, X_test, y_train, y_test = prepareData(dataset.Users, test_size=0.3, lag_start=12, lag_end=48)
+lr = LinearRegression()
+lr.fit(X_train, y_train)
+prediction = lr.predict(X_test)
+plt.figure(figsize=(15, 7))
+plt.plot(prediction, "r", label="prediction")
+plt.plot(y_test.values, label="actual")
+plt.legend(loc="best")
+plt.title("Linear regression\n Mean absolute error {} users".format(round(mean_absolute_error(prediction, y_test))))
+plt.grid(True);
+
+
+Также можно провести оценку модели на кросс-валидации, тому же принципу, что был использован ранее. Для этого воспользуемся функцией (с небольшими модификациями), предложенной в посте Pythonic Cross Validation on Time Series
+
+def performTimeSeriesCV(X_train, y_train, number_folds, model, metrics):
+    print('Size train set: {}'.format(X_train.shape))
+    
+    k = int(np.floor(float(X_train.shape[0]) / number_folds))
+    print('Size of each fold: {}'.format(k))
+
+    errors = np.zeros(number_folds-1)
+
+    # loop from the first 2 folds to the total number of folds    
+    for i in range(2, number_folds + 1):
+        print()
+        split = float(i-1)/i
+        print('Splitting the first ' + str(i) + ' chunks at ' + str(i-1) + '/' + str(i) )
+
+        X = X_train[:(k*i)]
+        y = y_train[:(k*i)]
+        print('Size of train + test: {}'.format(X.shape)) # the size of the dataframe is going to be k*i
+
+        index = int(np.floor(X.shape[0] * split))
+        
+        # folds used to train the model        
+        X_trainFolds = X[:index]        
+        y_trainFolds = y[:index]
+        
+        # fold used to test the model
+        X_testFold = X[(index + 1):]
+        y_testFold = y[(index + 1):]
+        
+        model.fit(X_trainFolds, y_trainFolds)
+        errors[i-2] = metrics(model.predict(X_testFold), y_testFold)
+
+    
+    # the function returns the mean of the errors on the n-1 folds    
+    return errors.mean()
+performTimeSeriesCV(X_train, y_train, 5, lr, mean_absolute_error)
+
+

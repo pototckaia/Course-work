@@ -1,0 +1,36 @@
+Общие советы
+Есть несколько общих советов по работе с несбалансированными выборками:
+
+собрать больше данных
+использовать метрики, нечувствительные к дисбалансу классов (F1, ROC AUC)
+oversampling/undersampling - брать больше объектов мало представленного класса, и мало - частого класса
+создать искусственные объекты, похожие на объекты редкого класса (например, алгоритмом SMOTE)
+С XGBoost можно:
+
+следить за тем, чтобы параметр min_child_weight был мал, хотя по умолчанию он и так равен 1.
+задать ббольше веса некоторым объектам при инициализации DMatrix
+контролировать отшошение числа представителей разных классов с помощью параметра set_pos_weight
+
+
+Задание весов вручную
+При создании объекта DMatrix можно сразу явно указать, что вес положительных объектов в 5 раз больше, чем отрицательных.
+
+weights = np.zeros(len(y_train))
+weights[y_train == 0] = 1
+weights[y_train == 1] = 5
+
+dtrain = xgb.DMatrix(X_train, label=y_train, weight=weights) # weights added
+dtest = xgb.DMatrix(X_test)
+
+
+Параметр scale_pos_weight в Xgboost
+Задание весов вручную можно заменить на параметр scale_pos_weight
+
+dtrain = xgb.DMatrix(X_train, label=y_train)
+dtest = xgb.DMatrix(X_test)
+Инициализируем параметр scale_pos_weight соотношением числа отрицательных и положительных объектов.
+
+train_labels = dtrain.get_label()
+
+ratio = float(np.sum(train_labels == 0)) / np.sum(train_labels == 1)
+params['scale_pos_weight'] = ratio
