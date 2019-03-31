@@ -1,8 +1,9 @@
 import pandas as pd
-import db_column_name
+import numpy as np
+import db_column_name as db
 import calendar
 from datetime import timedelta
-
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 
 def convert_date(df, name):
     df[name] = pd.to_datetime(df[name])
@@ -53,3 +54,25 @@ def group_by_n_day(df, date, day_delta):
     offset.index = [date]
     return offset
 
+
+def clean_dataset(df):
+    assert isinstance(df, pd.DataFrame), "df needs to be a pd.DataFrame"
+    df.dropna(inplace=True)
+    indices_to_keep = ~df.isin([np.nan, np.inf, -np.inf]).any(1)
+    return df[indices_to_keep].astype(np.float64)
+
+
+def getTarget(X ):
+    c = db.ColumnName()
+    y = X[[c.value]]
+    X = X.drop(c.value, axis=1)
+    return X, y  
+
+
+def print_mean(y_t, y_tr, first, second):
+    mse_test = mean_squared_error(y_t[first], y_t[second])
+    mse_train = mean_squared_error(y_tr[first], y_tr[second])
+    print("Mean squared error on train {} and test {}".format(mse_train, mse_test))
+    mae_test = mean_absolute_error(y_t[first], y_t[second])
+    mae_train = mean_absolute_error(y_tr[first], y_tr[second])
+    print("Mean absolute error on train {} and test {}".format(mae_train, mae_test))
