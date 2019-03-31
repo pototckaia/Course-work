@@ -1,0 +1,24 @@
+# first 
+from matplotlib import pyplot as plt
+
+with plt.xkcd():
+    plt.figure(figsize=(10, 6))
+    plt.plot(X_test, f(X_test), "b")
+    plt.scatter(X_train, y_train, c="b", s=20)
+    plt.plot(X_test, d_predict, "g", lw=2)
+    plt.xlim([-5, 5])
+    plt.title("Decision tree regressor, MSE = %.2f" % 
+              np.sum((y_test - d_predict) ** 2))
+
+    gbtree = GradientBoostingRegressor(n_estimators=100, subsample=0.5,
+                                      random_state=42)  
+    gbtree.fit(X_train, y_train)
+    gb_predict = gbtree.predict(X_test)
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(X_test, f(X_test), "b")
+    plt.scatter(X_train, y_train, c="b", s=20)
+    plt.plot(X_test, gb_predict, "r", lw=2)
+    plt.xlim([-5, 5])
+    plt.title("Boosted ensemble of decision tree regressors, MSE = %.2f" % 
+              np.sum((y_test - gb_predict) ** 2));
