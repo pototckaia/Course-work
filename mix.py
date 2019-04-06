@@ -68,6 +68,13 @@ def getTarget(X ):
     X = X.drop(c.value, axis=1)
     return X, y  
 
+def mean_absolute_percentage_error(y_true, y_pred):
+    mask = y_true != 0
+    return (np.fabs((y_true - y_pred)/y_true))[mask].mean()
+
+def xgb_mape(preds, dtrain):
+   labels = dtrain.get_label()
+   return ('mape', -np.mean(np.abs((labels - preds) / (labels+1))))
 
 def print_mean(y_t, y_tr, first, second):
     mse_test = mean_squared_error(y_t[first], y_t[second])
@@ -88,5 +95,10 @@ def print_mean(y_t, y_tr, first, second):
 
     mear_train = median_absolute_error(y_true=y_tr[first], y_pred=y_tr[second])
     mear_test = median_absolute_error(y_true=y_t[first], y_pred=y_t[second])
-    print("Median absolute error on train {} and test {}".format(r2_train, r2_test))
+    print("Median absolute error on train {} and test {}".format(mear_train, mear_test))
+
+    mape_train = mean_absolute_percentage_error(y_true=y_tr[first], y_pred=y_tr[second])
+    mape_test = mean_absolute_percentage_error(y_true=y_t[first], y_pred=y_t[second])
+    print("Mean absolute percentage error on train {} and test {}".format(mape_train, mape_test))
+
 
