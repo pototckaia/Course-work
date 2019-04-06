@@ -3,7 +3,7 @@ import numpy as np
 import db_column_name as db
 import calendar
 from datetime import timedelta
-from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error, explained_variance_score, median_absolute_error
 
 def convert_date(df, name):
     df[name] = pd.to_datetime(df[name])
@@ -73,6 +73,20 @@ def print_mean(y_t, y_tr, first, second):
     mse_test = mean_squared_error(y_t[first], y_t[second])
     mse_train = mean_squared_error(y_tr[first], y_tr[second])
     print("Mean squared error on train {} and test {}".format(mse_train, mse_test))
+    
     mae_test = mean_absolute_error(y_t[first], y_t[second])
     mae_train = mean_absolute_error(y_tr[first], y_tr[second])
     print("Mean absolute error on train {} and test {}".format(mae_train, mae_test))
+
+    evs_test = explained_variance_score(y_true=y_t[first], y_pred=y_t[second])
+    evs_train = explained_variance_score(y_true=y_tr[first], y_pred=y_tr[second])
+    print("Explained variance score on train {} and test {}".format(evs_train, evs_test))
+
+    r2_train = r2_score(y_true=y_tr[first], y_pred=y_tr[second])
+    r2_test = r2_score(y_true=y_t[first], y_pred=y_t[second])
+    print("Coefficient of determination on train {} and test {}".format(r2_train, r2_test))
+
+    mear_train = median_absolute_error(y_true=y_tr[first], y_pred=y_tr[second])
+    mear_test = median_absolute_error(y_true=y_t[first], y_pred=y_t[second])
+    print("Median absolute error on train {} and test {}".format(r2_train, r2_test))
+
