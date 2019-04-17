@@ -103,6 +103,32 @@ def copy_new_db_predictor_id(point_id):
 #point_id, predictor_id, actual_date, offset_h, value
 
 
-copy_cvs_predictant_storage(31088, 103)
-# copy_cvs_predictor_storage()
+# copy_cvs_predictant_storage(31088, 103)
+# copy_cvs_predictant_storage(31168, 103)
+# copy_cvs_predictant_storage(31286, 103)
+# copy_cvs_predictant_storage(31369, 103)
+# copy_cvs_predictant_storage(31416, 103)
+# copy_cvs_predictant_storage(31469, 103)
+# copy_cvs_predictant_storage(31561, 103)
+# copy_cvs_predictant_storage(31655, 103)
+# copy_cvs_predictant_storage(31770, 103)
+# copy_cvs_predictant_storage(31786, 103)
+# copy_cvs_predictant_storage(31832, 103)
+# copy_cvs_predictant_storage(31713, 103)
+# copy_cvs_predictant_storage(31735, 103)
+
+
 # copy_new_db_predictor_id(31088)
+copy_new_db_predictor_id(31168)
+# copy_new_db_predictor_id(31286)
+# copy_new_db_predictor_id(31369)
+# copy_new_db_predictor_id(31416)
+# copy_new_db_predictor_id(31469)
+# copy_new_db_predictor_id(31561)
+# copy_new_db_predictor_id(31655)
+# copy_new_db_predictor_id(31770)
+# copy_new_db_predictor_id(31786)
+# copy_new_db_predictor_id(31832)
+# copy_new_db_predictor_id(31713)
+# copy_new_db_predictor_id(31735)
+
