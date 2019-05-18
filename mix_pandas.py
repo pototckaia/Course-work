@@ -79,10 +79,10 @@ def get_delta_day(df, date, day):
     return df.iloc[(df.index >= start_date) & (df.index <= end_date)]
 
 
-def winsorized(x, name, quant):
+def winsorized(x, name, quant, delta):
     w = x[[name]]
     for index, row in x.iterrows():
-        s = get_delta_day(x, index, 5)[[name]]
+        s = get_delta_day(x, index, delta)[[name]]
         q = s.quantile(quant)
         v = row[name]
 

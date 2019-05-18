@@ -14,7 +14,7 @@ def reshapeToComplex(r, a):
     return Y_
 
 
-def fft_target(df, target, name):
+def fft_target(df, target, name, indexName):
     N = df.shape[0]
     cn = db.ColumnName()
 
@@ -26,7 +26,7 @@ def fft_target(df, target, name):
     phase = np.angle(Y)
 
     fft_target = pd.DataFrame(np.hstack((amplitude, phase)), columns=['amplitude', 'phase'])
-    fft_target.loc[:, cn.date] = y['index']
+    fft_target.loc[:, cn.date] = y[indexName]
 
     fft_target.set_index(index, inplace=True)
     fft_X = df.set_index(index)
