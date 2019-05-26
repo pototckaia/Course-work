@@ -40,13 +40,11 @@ def print_mean(y_true, y_predict):
 	mear = median_absolute_error(y_true, y_predict)
 	print("Median absolute error {:.5f}".format(mear))
 
-	# evs_test = explained_variance_score(y_true=y_t[first], y_pred=y_t[second])
-	# evs_train = explained_variance_score(y_true=y_tr[first], y_pred=y_tr[second])
-	# print("Explained variance score on train {:.5f} and test {:.5f}".format(evs_train, evs_test))
+	evs = explained_variance_score(y_true, y_predict)
+	print("Explained variance score {:.5f}".format(evs))
 
-	# r2_train = r2_score(y_true=y_tr[first], y_pred=y_tr[second])
-	# r2_test = r2_score(y_true=y_t[first], y_pred=y_t[second])
-	# print("Coefficient of determination on train {:.5f} and test {:.5f}".format(r2_train, r2_test))
+	r2 = r2_score(y_true, y_predict)
+	print("Coefficient of determination {:.5f}".format(r2))
 
 
 def predict_model(model, X_train, X_test, target_train, target_test, target_name):

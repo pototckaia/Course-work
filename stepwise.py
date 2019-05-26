@@ -5,7 +5,7 @@ import pandas as pd
 def stepwise_selection(X, y, 
                        initial_list=[], 
                        threshold_in=0.01, 
-                       threshold_out = 0.05, 
+                       threshold_out=0.05, 
                        verbose=True):
     """ Perform a forward-backward feature selection 
     based on p-value from statsmodels.api.OLS
