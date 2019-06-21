@@ -5,7 +5,9 @@ import xgboost as xgb
 import mix_pandas as mix
 import predict as predict_mix
 import db_column_name as db
+
 import matplotlib.pyplot as plt
+
 from pylab import rcParams
 rcParams['figure.figsize'] = 10, 7
 
@@ -21,14 +23,16 @@ mix.set_index_date(X, cn.date)
 X = X.drop([cn.point], axis=1)
 X = X[[x for x in X.columns if 'avg' in x or 
        x == cn.offset]]
-
+    
 X = X[X[cn.offset] == 69]
 X = X[X.index.hour == 21]
 print(X.shape)
 
-X = X.drop([cn.offset], axis=1)
+    
+# X = mix.mean_day(X)
+# target_minT.index = target_minT.index.round('D')
 
-X = X.iloc[3:] # remove on change
+X = X.drop([cn.offset], axis=1)
 
 target_minT = target_minT.reindex(X.index)
 target_minT = mix.clean(target_minT)
@@ -37,19 +41,10 @@ X = mix.clean(X)
 
 target_minT = mix.winsorized(target_minT, cn.value, [0.05, 0.95], 5)
 X = X.reindex(target_minT.index)
+print(X.shape)
 
-from sklearn.feature_selection import SelectFromModel
-from sklearn.linear_model import LinearRegression, Lasso
-from stepwise import stepwise_selection
+# don't change
 
-selectColumns = stepwise_selection(X, target_minT)
-X_select = X.loc[:, selectColumns]
-
-X_select.head()
-
-predict = predict_mix.predict_model_split(LinearRegression(), X_select, target_minT, cn.value, 5)
-for i, (train, test) in enumerate(predict):
-    predict_mix.print_mean(train[[cn.value]], train[['prediction']])
-    predict_mix.print_mean(test[[cn.value]], test[['prediction']])
-    test.plot(style='.')
-    plt.savefig('./plot/plot/stepwise_regression_5_cv_{}_31286.svg'.format(i))
+X = X[X.index.year >= 2015]
+X['avg t2'].plot(style='.')
+plt.savefig('./plot/plot/X_avg_t2_31286.svg')
